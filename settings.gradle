@@ -1,0 +1,8 @@
+rootProject.name = 'gift'
+include 'gift-api'
+include 'gift-batch'
+include 'gift-admin'
+include 'gift-consumer'
+include 'gift-domain'
+include 'gift-core'
+

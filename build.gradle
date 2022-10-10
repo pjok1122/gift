@@ -1,0 +1,111 @@
+buildscript {
+    ext {
+        springBootVersion = '2.6.6'
+        springCloudVersion = '2021.0.1'
+        spockVersion = '2.0-groovy-3.0'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    //공통 의존성
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.10.RELEASE"
+    }
+}
+
+plugins {
+    id 'java'
+}
+
+//공통 속성 관리
+allprojects {
+    group 'org.study'
+    version '1.0-SNAPSHOT'
+}
+
+//하위 프로젝트 설정
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'idea'
+    apply plugin: 'jacoco'
+    apply plugin: 'groovy'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 11
+    targetCompatibility = 11
+    compileJava.options.encoding = 'UTF-8'
+
+    //sonarqube xml report
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    //하위 모듈 의존성
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+        implementation 'org.projectlombok:lombok'
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+        implementation 'org.springframework:spring-web'
+
+        annotationProcessor 'org.projectlombok:lombok'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation "org.spockframework:spock-core:${spockVersion}"
+        testImplementation "org.spockframework:spock-spring:${spockVersion}"
+        testImplementation 'org.codehaus.groovy:groovy'
+        testImplementation 'org.codehaus.groovy:groovy-test'
+        testImplementation 'io.projectreactor:reactor-test'
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+}
+
+//프로젝트 개별 의존성
+project(':gift-api') {
+    dependencies {
+        implementation project(":gift-core")
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+    }
+}
+
+project(':gift-batch') {
+    dependencies {
+        implementation project(":gift-core")
+    }
+}
+
+project(':gift-admin') {
+    dependencies {
+        implementation project(":gift-core")
+    }
+}
+
+project(':gift-consumer') {
+    dependencies {
+        implementation project(":gift-core")
+    }
+}

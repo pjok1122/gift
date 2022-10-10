@@ -1,0 +1,7 @@
+spring:
+  application.name: gift-api
+  profiles:
+    active: local
+  sleuth:
+    tx:
+      enabled: false # https://github.com/spring-cloud/spring-cloud-sleuth/issues/2114
