@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: root
+    jdbcUrl: jdbc:mysql://gift.clrxdjayejfa.ap-northeast-2.rds.amazonaws.com:3306/gift?useUnicode=true&characterEncoding=utf8
+    password:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    poolName: gift
+    validationQuery: SELECT 1
+    testOnBorrow: false
+    testWhileIdle: true
+    initialSize: 20
+    minIdle: 20
+    maxIdle: 20
+    maxActive: 20
+    maxWait: 2000
+    timeBetweenEvictionRunsMillis: 80000
+
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
